@@ -77,23 +77,24 @@ export default class InputHandler {
         const swipeThreshold = 20; // Minimum pixels to be considered a swipe
 
         if (this.moved && (Math.abs(dx) > swipeThreshold || Math.abs(dy) > swipeThreshold)) {
-            // Adjust swipe vector for rotation. We rotate by NEGATIVE rotation
-            // to convert screen coordinates back to board coordinates.
+            // Transform swipe vector from screen coordinates to board coordinates
+            // The rotation represents how the candies are rotated, so we need to apply
+            // the inverse rotation to the swipe to get board-relative directions
             const rad = -(this.rotation * Math.PI / 180);
             const cos = Math.cos(rad);
             const sin = Math.sin(rad);
             const adjustedDx = dx * cos - dy * sin;
             const adjustedDy = dx * sin + dy * cos;
 
-            // A swipe has been detected, determine direction
+            // A swipe has been detected, determine direction in board space
             let endRow, endCol;
             const startRow = parseInt(this.startCandy.dataset.row);
             const startCol = parseInt(this.startCandy.dataset.col);
 
-            if (Math.abs(adjustedDx) > Math.abs(adjustedDy)) { // Horizontal swipe
+            if (Math.abs(adjustedDx) > Math.abs(adjustedDy)) { // Horizontal swipe in board space
                 endRow = startRow;
                 endCol = startCol + (adjustedDx > 0 ? 1 : -1);
-            } else { // Vertical swipe
+            } else { // Vertical swipe in board space
                 endRow = startRow + (adjustedDy > 0 ? 1 : -1);
                 endCol = startCol;
             }
