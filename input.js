@@ -91,21 +91,21 @@ export default class InputHandler {
 
             if (rotation === 0) { // portrait-primary (Blue)
                 boardDirection = screenDirection;
-            } else if (rotation === 90) { // landscape-primary (Green)
-                if (screenDirection === 'up') boardDirection = 'right';
-                else if (screenDirection === 'down') boardDirection = 'left';
-                else if (screenDirection === 'left') boardDirection = 'up';
-                else if (screenDirection === 'right') boardDirection = 'down';
-            } else if (rotation === 180) { // portrait-secondary (Red)
-                if (screenDirection === 'up') boardDirection = 'down';
-                else if (screenDirection === 'down') boardDirection = 'up';
-                else if (screenDirection === 'left') boardDirection = 'right';
-                else if (screenDirection === 'right') boardDirection = 'left';
-            } else if (rotation === 270) { // landscape-secondary (Yellow)
+            } else if (rotation === 90) { // landscape-primary (Green) - Rotated 90 deg clockwise
                 if (screenDirection === 'up') boardDirection = 'left';
                 else if (screenDirection === 'down') boardDirection = 'right';
                 else if (screenDirection === 'left') boardDirection = 'down';
                 else if (screenDirection === 'right') boardDirection = 'up';
+            } else if (rotation === 180) { // portrait-secondary (Red) - Upside down
+                if (screenDirection === 'up') boardDirection = 'down';
+                else if (screenDirection === 'down') boardDirection = 'up';
+                else if (screenDirection === 'left') boardDirection = 'right';
+                else if (screenDirection === 'right') boardDirection = 'left';
+            } else if (rotation === 270) { // landscape-secondary (Yellow) - Rotated 90 deg counter-clockwise
+                if (screenDirection === 'up') boardDirection = 'right';
+                else if (screenDirection === 'down') boardDirection = 'left';
+                else if (screenDirection === 'left') boardDirection = 'up';
+                else if (screenDirection === 'right') boardDirection = 'down';
             }
 
             let endRow, endCol;
