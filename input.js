@@ -77,14 +77,13 @@ export default class InputHandler {
         const swipeThreshold = 20; // Minimum pixels to be considered a swipe
 
         if (this.moved && (Math.abs(dx) > swipeThreshold || Math.abs(dy) > swipeThreshold)) {
-            // Adjust swipe vector for rotation. We want to rotate the vector
-            // by the NEGATIVE of the board's rotation to get the direction
-            // in the board's original coordinate system.
-            const rad = this.rotation * (Math.PI / 180);
+            // Adjust swipe vector for rotation. We rotate by NEGATIVE rotation
+            // to convert screen coordinates back to board coordinates.
+            const rad = -(this.rotation * Math.PI / 180);
             const cos = Math.cos(rad);
             const sin = Math.sin(rad);
-            const adjustedDx = dx * cos + dy * sin;
-            const adjustedDy = -dx * sin + dy * cos;
+            const adjustedDx = dx * cos - dy * sin;
+            const adjustedDy = dx * sin + dy * cos;
 
             // A swipe has been detected, determine direction
             let endRow, endCol;
