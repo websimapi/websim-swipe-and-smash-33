@@ -89,23 +89,35 @@ export default class InputHandler {
             const rotation = this.rotation; // 0, 90, 180, 270
             let boardDirection;
 
-            if (rotation === 0) { // portrait-primary (Blue)
-                boardDirection = screenDirection;
-            } else if (rotation === 90) { // landscape-primary (Green) - Rotated 90 deg clockwise
-                if (screenDirection === 'up') boardDirection = 'left';
-                else if (screenDirection === 'down') boardDirection = 'right';
-                else if (screenDirection === 'left') boardDirection = 'down';
-                else if (screenDirection === 'right') boardDirection = 'up';
-            } else if (rotation === 180) { // portrait-secondary (Red) - Upside down
-                if (screenDirection === 'up') boardDirection = 'down';
-                else if (screenDirection === 'down') boardDirection = 'up';
-                else if (screenDirection === 'left') boardDirection = 'right';
-                else if (screenDirection === 'right') boardDirection = 'left';
-            } else if (rotation === 270) { // landscape-secondary (Yellow) - Rotated 90 deg counter-clockwise
-                if (screenDirection === 'up') boardDirection = 'right';
-                else if (screenDirection === 'down') boardDirection = 'left';
-                else if (screenDirection === 'left') boardDirection = 'up';
-                else if (screenDirection === 'right') boardDirection = 'down';
+            // This logic maps the physical screen swipe to the intended *visual* direction on the rotated board.
+            switch (rotation) {
+                case 0: // portrait-primary (Blue)
+                    boardDirection = screenDirection;
+                    break;
+                case 90: // landscape-primary (Green) - Screen rotated 90 deg clockwise
+                    switch (screenDirection) {
+                        case 'up': boardDirection = 'left'; break;
+                        case 'down': boardDirection = 'right'; break;
+                        case 'left': boardDirection = 'down'; break;
+                        case 'right': boardDirection = 'up'; break;
+                    }
+                    break;
+                case 180: // portrait-secondary (Red) - Screen is upside down
+                    switch (screenDirection) {
+                        case 'up': boardDirection = 'down'; break;
+                        case 'down': boardDirection = 'up'; break;
+                        case 'left': boardDirection = 'right'; break;
+                        case 'right': boardDirection = 'left'; break;
+                    }
+                    break;
+                case 270: // landscape-secondary (Yellow) - Screen rotated 270 deg clockwise
+                    switch (screenDirection) {
+                        case 'up': boardDirection = 'right'; break;
+                        case 'down': boardDirection = 'left'; break;
+                        case 'left': boardDirection = 'up'; break;
+                        case 'right': boardDirection = 'down'; break;
+                    }
+                    break;
             }
 
             let endRow, endCol;
