@@ -78,8 +78,8 @@ export default class InputHandler {
 
         if (this.moved && (Math.abs(dx) > swipeThreshold || Math.abs(dy) > swipeThreshold)) {
             // Transform swipe vector from screen coordinates to board coordinates
-            // The rotation represents how the candies are rotated, so we need to apply
-            // the inverse rotation to the swipe to get board-relative directions
+            // The rotation represents how the board is visually rotated
+            // We need to inverse-transform the swipe to get the correct board direction
             const rad = -(this.rotation * Math.PI / 180);
             const cos = Math.cos(rad);
             const sin = Math.sin(rad);
