@@ -77,26 +77,46 @@ export default class InputHandler {
         const swipeThreshold = 20; // Minimum pixels to be considered a swipe
 
         if (this.moved && (Math.abs(dx) > swipeThreshold || Math.abs(dy) > swipeThreshold)) {
-            // Transform swipe vector from screen coordinates to board coordinates
-            // The rotation represents how the board is visually rotated
-            // We need to inverse-transform the swipe to get the correct board direction
-            const rad = -(this.rotation * Math.PI / 180);
-            const cos = Math.cos(rad);
-            const sin = Math.sin(rad);
-            const adjustedDx = dx * cos - dy * sin;
-            const adjustedDy = dx * sin + dy * cos;
+            // Determine screen-based swipe direction
+            let screenDirection;
+            if (Math.abs(dx) > Math.abs(dy)) {
+                screenDirection = dx > 0 ? 'right' : 'left';
+            } else {
+                screenDirection = dy > 0 ? 'down' : 'up';
+            }
 
-            // A swipe has been detected, determine direction in board space
+            // Map screen direction to board direction based on rotation
+            const rotation = this.rotation; // 0, 90, 180, 270
+            let boardDirection;
+
+            if (rotation === 0) { // portrait-primary (Blue)
+                boardDirection = screenDirection;
+            } else if (rotation === 90) { // landscape-primary (Green)
+                if (screenDirection === 'up') boardDirection = 'right';
+                else if (screenDirection === 'down') boardDirection = 'left';
+                else if (screenDirection === 'left') boardDirection = 'up';
+                else if (screenDirection === 'right') boardDirection = 'down';
+            } else if (rotation === 180) { // portrait-secondary (Red)
+                if (screenDirection === 'up') boardDirection = 'down';
+                else if (screenDirection === 'down') boardDirection = 'up';
+                else if (screenDirection === 'left') boardDirection = 'right';
+                else if (screenDirection === 'right') boardDirection = 'left';
+            } else if (rotation === 270) { // landscape-secondary (Yellow)
+                if (screenDirection === 'up') boardDirection = 'left';
+                else if (screenDirection === 'down') boardDirection = 'right';
+                else if (screenDirection === 'left') boardDirection = 'down';
+                else if (screenDirection === 'right') boardDirection = 'up';
+            }
+
             let endRow, endCol;
             const startRow = parseInt(this.startCandy.dataset.row);
             const startCol = parseInt(this.startCandy.dataset.col);
 
-            if (Math.abs(adjustedDx) > Math.abs(adjustedDy)) { // Horizontal swipe in board space
-                endRow = startRow;
-                endCol = startCol + (adjustedDx > 0 ? 1 : -1);
-            } else { // Vertical swipe in board space
-                endRow = startRow + (adjustedDy > 0 ? 1 : -1);
-                endCol = startCol;
+            switch (boardDirection) {
+                case 'up':    endRow = startRow - 1; endCol = startCol;     break;
+                case 'down':  endRow = startRow + 1; endCol = startCol;     break;
+                case 'left':  endRow = startRow;     endCol = startCol - 1; break;
+                case 'right': endRow = startRow;     endCol = startCol + 1; break;
             }
 
             // Find the candy at the target position
